@@ -23,7 +23,7 @@ router.post("/register", async (req, res) => {
     const profile = new Profile({
       user: user._id,
       email,
-      name,
+      fullName: name,
       role,
     });
     await profile.save();
@@ -52,14 +52,24 @@ router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    console.log("Login attempt for email:", email); // Debug log
+
+    // Validate input
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email and password are required" });
+    }
+
     // Find user
     const user = await User.findOne({ email });
     if (!user) {
+      console.log("User not found:", email); // Debug log
       return res.status(401).json({ error: "Invalid email or password" });
     }
 
     // Check password
     const isMatch = await user.comparePassword(password);
+    console.log("Password match:", isMatch); // Debug log
+
     if (!isMatch) {
       return res.status(401).json({ error: "Invalid email or password" });
     }
@@ -73,12 +83,13 @@ router.post("/login", async (req, res) => {
       user: {
         id: user._id,
         email: user.email,
-        name: user.name,
+        fullName: user.fullName,
         role: user.role,
       },
       token,
     });
   } catch (error) {
+    console.error("Login error:", error); // Debug log
     res.status(400).json({ error: error.message });
   }
 });
