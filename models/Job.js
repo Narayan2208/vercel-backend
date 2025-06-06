@@ -80,6 +80,38 @@ const jobSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  analyticsData: {
+    viewsByDate: [
+      {
+        date: { type: Date },
+        count: { type: Number, default: 0 },
+      },
+    ],
+    applicationsByDate: [
+      {
+        date: { type: Date },
+        count: { type: Number, default: 0 },
+      },
+    ],
+    applicationsByStatus: [
+      {
+        status: { type: String },
+        count: { type: Number, default: 0 },
+      },
+    ],
+    timeOfDayData: [
+      {
+        hour: { type: Number },
+        views: { type: Number, default: 0 },
+      },
+    ],
+    sourceBreakdown: [
+      {
+        source: { type: String },
+        count: { type: Number, default: 0 },
+      },
+    ],
+  },
 });
 
 // Update the updatedAt timestamp before saving
